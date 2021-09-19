@@ -37,7 +37,7 @@ def get_from_db(table):
     return cursor.fetchall()
 
 
-@app.route('/api/posts', methods=['GET'], strict_slashes=False)
+@app.route('/', methods=['GET'], strict_slashes=False)
 def posts():
     body = {}
     key = "posts"
