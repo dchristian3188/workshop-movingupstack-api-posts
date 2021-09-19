@@ -41,22 +41,25 @@ def get_from_db(table):
 def posts():
     body = {}
     key = "posts"
+    try:
+        value = red.get(key)
+        if not value:
+            posts = get_from_db(key)
+            red.set(key, str(json.dumps(posts)))
 
-    value = red.get(key)
-    if not value:
-        posts = get_from_db(key)
-        red.set(key, str(json.dumps(posts)))
+            body['source'] = 'database'
+            body['data'] = posts
+        else:
+            body['source'] = 'redis'
+            body['data'] = json.loads(value.decode('ascii'))
 
-        body['source'] = 'database'
-        body['data'] = posts
-    else:
-        body['source'] = 'redis'
-        body['data'] = json.loads(value.decode('ascii'))
-
-    print("Body:")
-    print(body)
-    return jsonify(body), 200
-
+        print("Body:")
+        print(body)
+        return jsonify(body), 200
+    except Exception as error: 
+        print(error)
+        body['data'] = error
+        return str(body), 200
 
 @app.route('/api/clear-cache', methods=['GET'], strict_slashes=False)
 def clear_cache():
