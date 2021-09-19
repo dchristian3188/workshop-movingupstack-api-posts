@@ -24,6 +24,7 @@ conn = None
 if not local_db:
     try:
         conn = mysql.connector.connect(host=db_host, user=db_user, passwd=db_passwd, database=db_name)
+        print(f"Connected to {db_host}")
     except:
         print("Unable to connect to MySQl")
 
@@ -32,7 +33,10 @@ def get_from_db(table):
     if local_db:
         return db.get(table)
 
+    
+    print(f"starting: conn cursor")
     cursor = conn.cursor()
+    print(f"starting: SELECT * FROM {table}")
     cursor.execute(f"SELECT * FROM {table}")
     return cursor.fetchall()
 
