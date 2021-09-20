@@ -19,6 +19,7 @@ db_user = os.environ.get('DB_USER', 'root')
 db_passwd = os.environ.get('DB_PASSWORD', 'myAwesomePassword')
 db_name = os.environ.get('DATABASE', 'mydb')
 
+
 def create_db():
     mydb = mysql.connector.connect(
         host=db_host,
@@ -30,26 +31,28 @@ def create_db():
     mycursor.execute(f"CREATE DATABASE IF NOT EXISTS `mydb`;")
     mycursor.execute("""
         USE `mydb`;
-        CREATE TABLE IF NOT EXISTS TABLE `threads` (
-            `id` int NOT NULL,
-            `title` varchar(50) NOT NULL,
-            `createdBy` int NOT NULL,
-            PRIMARY KEY (`id`)
+        CREATE TABLE IF NOT EXISTS `posts`(
+            `thread` int NOT NULL,
+            `text` varchar(50) NOT NULL,
+            `user` int NOT NULL,
+            PRIMARY KEY (`thread`)
             );
+        """,multi=True)
 
-            insert  into `threads`(`id`,`title`,`createdBy`) values
-            (1,'What''s up with the Lich?',1);
-            """ )
+    mycursor.execute("""    
+        USE `mydb`;
 
+        insert into `posts`(`thread`,`text`,`user`) 
+            values (1,'Has anyone checked on the lich recently?',1);
+            """,multi=True)
+            
+create_db()
 conn = None
 if not local_db:
     try:
         conn = mysql.connector.connect(host=db_host, user=db_user, passwd=db_passwd, database=db_name)
     except:
-        create_db()
-        conn = mysql.connector.connect(host=db_host, user=db_user, passwd=db_passwd, database=db_name)
-        print("Unable to connect to MySQl")
-
+        print("unable to connect to MySQL")
 
 def get_from_db(table):
     if local_db:
