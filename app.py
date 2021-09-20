@@ -19,13 +19,32 @@ db_user = os.environ.get('DB_USER', 'root')
 db_passwd = os.environ.get('DB_PASSWORD', 'myAwesomePassword')
 db_name = os.environ.get('DATABASE', 'mydb')
 
+def create_db():
+    mydb = mysql.connector.connect(
+        host=db_host,
+        user=db_user,
+        password=db_passwd
+    )
+
+    mycursor = mydb.cursor()
+    mycursor.execute(f"CREATE DATABASE IF NOT EXISTS `mydb`;")
+    mycursor.execute("""
+        CREATE TABLE IF NOT EXISTS `posts`(
+            `thread` int NOT NULL,
+            `text` varchar(50) NOT NULL,
+            `user` int NOT NULL,
+            PRIMARY KEY (`thread`)
+            );""" )
+    mycursor.execute("insert  into `posts`(`thread`,`text`,`user`) values (1,'Has anyone checked on the lich recently?',1);")
+
 
 conn = None
 if not local_db:
     try:
         conn = mysql.connector.connect(host=db_host, user=db_user, passwd=db_passwd, database=db_name)
-        print(f"Connected to {db_host}")
     except:
+        create_db()
+        conn = mysql.connector.connect(host=db_host, user=db_user, passwd=db_passwd, database=db_name)
         print("Unable to connect to MySQl")
 
 
@@ -41,7 +60,7 @@ def get_from_db(table):
     return cursor.fetchall()
 
 
-@app.route('/', methods=['GET'], strict_slashes=False)
+@app.route('/api/posts', methods=['GET'], strict_slashes=False)
 def posts():
     body = {}
     key = "posts"
