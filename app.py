@@ -35,10 +35,11 @@ def create_db():
             `text` varchar(50) NOT NULL,
             `user` int NOT NULL,
             PRIMARY KEY (`thread`)
-            );""" )
-    mycursor.execute("insert  into `posts`(`thread`,`text`,`user`) values (1,'Has anyone checked on the lich recently?',1);")
-
-
+            );
+        insert into `posts`(`thread`,`text`,`user`) 
+            values (1,'Has anyone checked on the lich recently?',1);
+            """ )
+            
 conn = None
 if not local_db:
     try:
