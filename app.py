@@ -39,17 +39,21 @@ def create_db():
             );
         """,multi=True)
 
-    mycursor.execute("""    
-        USE `mydb`;
+    try:
+        mycursor.execute("""    
+            USE `mydb`;
 
-        insert into `posts`(`thread`,`text`,`user`) 
-            values (1,'Has anyone checked on the lich recently?',1);
-            """,multi=True)
-            
+            insert into `posts`(`thread`,`text`,`user`) 
+                values (1,'Has anyone checked on the lich recently?',1);
+                """,multi=True)
+    except:
+        print("error inserting row")
 create_db()
+
 conn = None
 if not local_db:
     try:
+        create_db()
         conn = mysql.connector.connect(host=db_host, user=db_user, passwd=db_passwd, database=db_name)
     except:
         print("unable to connect to MySQL")
@@ -90,13 +94,11 @@ def posts():
         body['data'] = error
         return str(error), 200
 
-@app.route('/api/clear-cache', methods=['GET'], strict_slashes=False)
+@app.route('/api/posts/clear-cache', methods=['GET'], strict_slashes=False)
 def clear_cache():
-    red.delete("users")
     red.delete("posts")
-    red.delete("threads")
 
-    return "", 200
+    return "cleared posts", 200
 
 
 if __name__ == '__main__':
