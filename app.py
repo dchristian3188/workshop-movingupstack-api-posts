@@ -30,16 +30,17 @@ def create_db():
     mycursor.execute(f"CREATE DATABASE IF NOT EXISTS `mydb`;")
     mycursor.execute("""
         USE `mydb`;
-        CREATE TABLE IF NOT EXISTS `posts`(
-            `thread` int NOT NULL,
-            `text` varchar(50) NOT NULL,
-            `user` int NOT NULL,
-            PRIMARY KEY (`thread`)
+        CREATE TABLE IF NOT EXISTS TABLE `threads` (
+            `id` int NOT NULL,
+            `title` varchar(50) NOT NULL,
+            `createdBy` int NOT NULL,
+            PRIMARY KEY (`id`)
             );
-        insert into `posts`(`thread`,`text`,`user`) 
-            values (1,'Has anyone checked on the lich recently?',1);
+
+            insert  into `threads`(`id`,`title`,`createdBy`) values
+            (1,'What''s up with the Lich?',1);
             """ )
-            
+
 conn = None
 if not local_db:
     try:
