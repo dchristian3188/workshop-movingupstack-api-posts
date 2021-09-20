@@ -29,6 +29,7 @@ def create_db():
     mycursor = mydb.cursor()
     mycursor.execute(f"CREATE DATABASE IF NOT EXISTS `mydb`;")
     mycursor.execute("""
+        USE `mydb`;
         CREATE TABLE IF NOT EXISTS `posts`(
             `thread` int NOT NULL,
             `text` varchar(50) NOT NULL,
