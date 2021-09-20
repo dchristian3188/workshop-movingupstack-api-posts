@@ -83,7 +83,7 @@ def posts():
     except Exception as error: 
         print(error)
         body['data'] = error
-        return str(f"host={db_host}, user={db_user}, passwd={db_passwd}, database={db_name}"), 200
+        return str(error), 200
 
 @app.route('/api/clear-cache', methods=['GET'], strict_slashes=False)
 def clear_cache():
